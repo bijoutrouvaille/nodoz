@@ -23,6 +23,5 @@ if [ $val -gt 1 ]; then
 fi
 
 echo "Will stay awake for $val $denom"
-# echo "Will stay awake for $(expr $seconds / 60) minutes"
 
 caffeinate -d sleep $seconds
