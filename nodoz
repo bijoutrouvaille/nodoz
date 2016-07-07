@@ -1,0 +1,28 @@
+#!/bin/sh
+usage() {
+echo "Usage: $0 <time>[specifier]
+specifier can be h for hours, m for minutes, s for seconds. If omitted, minutes are assumed.
+example: $0 2h
+"
+}
+time=${1:-60}
+denom=minute
+shopt -s extglob;
+case $time in
+  +([0-9])[hH] ) seconds=`expr 3600 \* ${time%[hH]}`; denom=hour ;;
+  +([0-9])[mM] ) seconds=`expr 60 \* ${time%[mM]}` ;;
+  +([0-9])[sS] ) seconds=${time%[sS]}               ; denom=second ;;
+  +([0-9])     ) seconds=`expr 60 \* ${time}` ;;
+              *) usage; exit 1 ;;
+
+esac
+
+val=${time%[a-zA-Z]}
+if [ $val -gt 1 ]; then
+  denom=${denom}s
+fi
+
+echo "Will stay awake for $val $denom"
+# echo "Will stay awake for $(expr $seconds / 60) minutes"
+
+caffeinate -d sleep $seconds
